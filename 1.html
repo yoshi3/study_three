@@ -22,7 +22,7 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 // レンダラーをdomへ挿入
 document.body.appendChild( renderer.domElement );
-// 横幅 10 高さ 10 深さ 10　の立方体（頂点の集合）を作成
+// 横幅 1 高さ 1 深さ 1　の立方体（頂点の集合）を作成
 var geometry = new THREE.CubeGeometry( 10, 10, 10);
 // マテリアル（表面）を作成
 var materials = [];
@@ -43,12 +43,12 @@ scene.add( cube );
 camera.position.z = 50;
 // ライトを作成
 var light = new THREE.DirectionalLight( 0xffffff );
-light.position.set( 1, 1, 1 ).normalize();
+light.position.set( 50, 50, 50 ).normalize();
 scene.add(light);
 
 // ライトを作成
 var light2 = new THREE.DirectionalLight( 0x555555 );
-light2.position.set( -1, -1, 1 ).normalize();
+light2.position.set( -50, -50, 50 ).normalize();
 scene.add(light2);
 
 // 動きの初期化

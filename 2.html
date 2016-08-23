@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset=utf-8>
-<title>1</title>
+<title>2</title>
 <style>
   body { margin: 0; }
   canvas { width: 100%; height: 100% }
@@ -39,7 +39,7 @@ var material = new THREE.MeshFaceMaterial(materials);
 var cube = new THREE.Mesh( geometry, material );
 // シーンにメッシュを追加
 scene.add( cube );
-// カメラの座標を手前へ 5 に設定（+で手前、-で前方）
+// カメラの座標を手前へ 50 に設定（+で手前、-で前方）
 camera.position.z = 50;
 // ライトを作成
 var light = new THREE.DirectionalLight( 0xffffff );
@@ -53,29 +53,21 @@ scene.add(light2);
 
 // 動きの初期化
 var angle = 0;
-var xl = 20;
-var zl = 20;
-var yl = 20;
-var radius = zl;
+// クォータニオンを使うフラグ
+cube.useQuaternion = true;
+var q = new THREE.Quaternion();
 
 // アニメーション
 var render = function () {
   requestAnimationFrame(render);
 
-  // rotationで回転
-  cube.rotation.x += 0.05;
-  cube.rotation.y += 0.05;
-  angle += 0.01;
+  angle += 10;
 
-  // 斜めに回転運動
-  var cos = Math.cos(angle);
-  var sin = Math.sin(angle);
-  var x = xl + cos * radius;
-  var y = yl + cos * radius;
-  var z = zl + sin * radius;
-  cube.position.x = x - xl;
-  cube.position.y = y - yl;
-  cube.position.z = z - zl;
+  // クォータニオンで回転
+  var axis = new THREE.Vector3(1,1,1).normalize();
+  var radius = angle * Math.PI / 180;
+  q.setFromAxisAngle(axis, radius);
+  cube.quaternion.copy(q);
 
   // レンダリング
   renderer.render(scene, camera);

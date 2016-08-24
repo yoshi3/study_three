@@ -5,20 +5,31 @@ var WebGL;
     function TEST() {
       var _this = this;
 
+      // 空間をつくる
       this.scene = new THREE.Scene();
       this.camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 10000);
       this.renderer = new THREE.WebGLRenderer;
+      // ライト
       this.light = new THREE.DirectionalLight('#0060ff', 1);
+      // 環境光
       this.ambient = new THREE.AmbientLight('#ffffff');
       this.scene.add(this.light);
+      // XYZ軸を表示する
       this.axis = new THREE.AxisHelper(1000);
+
+      // パネルを作成
       this.geometry1 = new THREE.PlaneGeometry(1, 1);
+      // ボックスを作成
       this.geometry2 = new THREE.BoxGeometry(1, 1, 1);
+
       this.material1 = new THREE.MeshLambertMaterial({color: 0xffffff});
       this.material2 = new THREE.MeshLambertMaterial({color: 0xcccccc});
+      // 回転軸をずらす
       this.object1 = new THREE.Mesh(this.geometry1.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0)), this.material1);
       this.object2 = new THREE.Mesh(this.geometry1, this.material2);
+
       this.cube = new THREE.Mesh(this.geometry2, this.material2);
+
       this.controls = new THREE.OrbitControls(this.camera);
 
       window.addEventListener('load', function() {
@@ -29,7 +40,8 @@ var WebGL;
     TEST.prototype.render = function() {
       var _this = this;
 
-      _this.object1.rotation.x = 3.14;
+      // 180度開く
+      _this.object1.rotation.x = 180 * Math.PI / 180;
 
       function animation() {
         requestAnimationFrame(animation);

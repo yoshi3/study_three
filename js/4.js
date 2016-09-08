@@ -10,10 +10,11 @@ var WebGL;
       this.camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 10000);
       this.renderer = new THREE.WebGLRenderer;
       // ライト
-      this.light = new THREE.DirectionalLight('#0060ff', 1);
+      this.light = new THREE.DirectionalLight(0xffffff, 1);
+      this.light.castShadow = true;
       // 環境光
-      this.ambient = new THREE.AmbientLight('#ffffff');
-      this.scene.add(this.light);
+      this.ambient = new THREE.AmbientLight(0x666666);
+
       // XYZ軸を表示する
       this.axis = new THREE.AxisHelper(1000);
 
@@ -30,13 +31,22 @@ var WebGL;
 
       this.cube = new THREE.Mesh(this.geometry2, this.material2);
 
-      var cylinder = new THREE.Mesh(                                     
-       new THREE.CylinderGeometry(1, 1, 0.1, 50),                         
-       new THREE.MeshPhongMaterial({                                      
-                 color: 0x00FF7F
-      }));
+      // 円柱を作る作る
+      var mesh = new THREE.MeshPhongMaterial({                                      
+          color: 0xffffff
+      })
+      mesh.castShadow = true;
+      this.cylinder = new THREE.Mesh(                                     
+       new THREE.CylinderGeometry(1, 1, 0.1, 50), mesh);
 
-      this.scene.add(cylinder);
+      this.sphere = new THREE.Mesh(                                  
+                        new THREE.SphereGeometry(0.5, 100, 100),    
+                        new THREE.MeshLambertMaterial({                          
+                           color: 0xffffff                                   
+                             }));
+
+      //影の有効化         
+      this.sphere.castShadow = true;  
 
       this.controls = new THREE.OrbitControls(this.camera);
 
@@ -76,7 +86,7 @@ var WebGL;
       this.renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(this.renderer.domElement);
 
-      this.scene.add(this.ambient, this.light, this.cube, this.object1, this.object2, this.axis);
+      this.scene.add(this.ambient, this.light, this.cube, this.object1, this.object2, this.cylinder, this.axis ,this.sphere);
       this.camera.position.z = 5;
 
       this.render();

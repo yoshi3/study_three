@@ -5,6 +5,30 @@ var WebGL;
     function TEST() {
       var _this = this;
 
+      var coin_sides_geo = new THREE.CylinderGeometry(10.0, 10.0, 1.0, 100.0, 10.0, true);
+      var coin_cap_geo = new THREE.CircleGeometry (10.0, 100.0, 0);
+
+      // テクスチャーの読み込み
+      var texloader = new THREE.TextureLoader();
+      var coin_sides_texture = texloader.load("/img/coin_side.jpg"); // side.jpg
+      var coin_cap_texture_top = texloader.load("/img/coin_top.jpg"); // top.jpg
+      var coin_cap_texture_bottom = texloader.load("/img/coin_bottom.jpg"); // bottom.jpg
+
+
+      var coin_sides_mat = new THREE.MeshLambertMaterial({ map: coin_sides_texture });
+      var coin_sides = new THREE.Mesh(coin_sides_geo, coin_sides_mat);
+
+      var coin_cap_top_mat = new THREE.MeshLambertMaterial({ map: coin_cap_texture_top });
+      var coin_cap_top = new THREE.Mesh(coin_cap_geo, coin_cap_top_mat);
+      coin_cap_top.rotation.x -= Math.PI/2;
+      coin_cap_top.position.y += 0.5;
+
+      var coin_cap_bottom_mat = new THREE.MeshLambertMaterial({ map: coin_cap_texture_bottom });
+      var coin_cap_bottom = new THREE.Mesh(coin_cap_geo, coin_cap_bottom_mat);
+      coin_cap_bottom.rotation.x -= Math.PI/2;
+      coin_cap_bottom.rotation.y += Math.PI;
+      coin_cap_bottom.position.y -= 0.5;
+
       // 空間をつくる
       this.scene = new THREE.Scene();
       this.camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 10000);
@@ -17,7 +41,7 @@ var WebGL;
       this.light = new THREE.DirectionalLight(0xffffff, 1);
 
       // 環境光
-      this.ambient = new THREE.AmbientLight(0x999999);
+      this.ambient = new THREE.AmbientLight(0x666666);
 
       // XYZ軸を表示する
       this.axis = new THREE.AxisHelper(1000);
@@ -25,38 +49,27 @@ var WebGL;
       this.controls = new THREE.OrbitControls(this.camera);
 
       this.light.position.set(0, 100, 30);
-      this.camera.position.set(9, 2, 1);
+      this.camera.position.set(0, 0, 60);
 
-      // 円柱を作る作る
-      var mesh = new THREE.MeshPhongMaterial({                                      
-          color: 0xffffff
-      })
-      mesh.castShadow = true;
-      this.cylinder = new THREE.Mesh(                                     
-       new THREE.CylinderGeometry(1, 1, 0.1, 50), mesh);
+      this.scene.add(this.light, this.ambient, this.axis);
 
-      this.scene.add(this.light, this.ambients, this.axis ,this.cylinder);
+      var coin = new THREE.Object3D();
+      coin.add(coin_sides);
+      coin.add(coin_cap_top);
+      coin.add(coin_cap_bottom);
+
+      this.scene.add(coin);
+
+      coin.rotation.x = Math.PI * 0.5;
 
       this.render();
     };
 
     TEST.prototype.render = function() {
       var _this = this;
-      var diff = 0.1;
 
       function animation() {
         requestAnimationFrame(animation);
-
-        _this.cylinder.rotation.x -= diff;
-        console.log(_this.cylinder.rotation.x);
-        if (diff > 0.0001) {
-          diff -= 0.001;
-        }
-        if (diff < 0) {
-          diff = 0;
-        }
-
-        _this.controls.update();
         _this.renderer.render(_this.scene, _this.camera);
       }
 

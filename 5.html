@@ -4,11 +4,33 @@
 <meta charset=utf-8>
 <title>5</title>
 <style>
-  body { margin: 0; }
-  canvas { width: 100%; height: 100% }
+body { 
+  margin: 0;
+  background: #333;
+}
+canvas { width: 100%; height: 100% }
 </style>
 </head>
 <body>
+<script id="fragmentShader" type="x-shader/x-vertex"> 
+varying vec3 vNormal;
+void main() 
+{
+  float intensity = pow( 0.01 - dot( vNormal, vec3( 0.0, 0.0, 1.0 ) ), 4.0 ); 
+  gl_FragColor = vec4( 1.0, 1.0, 1.0, 0.8 ) * intensity;
+}
+</script>
+<script id="vertexShader" type="x-shader/x-vertex">
+varying vec3 vNormal;
+void main() 
+{
+  vNormal = normalize( normalMatrix * normal );
+  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+}
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js"></script>
 <script src="js/three.js"></script>
 <script src="js/OrbitControls.js"></script>
 <script src="js/5.js"></script>
